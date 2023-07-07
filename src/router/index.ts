@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue';
 import Task1View from '../views/Task1View.vue';
 import Task2View from '../views/Task2View.vue';
 import PracticeView from '../views/PracticeView.vue'
+import TableView from "../views/TableView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +26,11 @@ const router = createRouter({
     path: '/prac',
     name: 'prac',
     component: PracticeView
+   },
+   {
+    path: '/form',
+    name: 'form',
+    component: TableView
    }
   ]
 })

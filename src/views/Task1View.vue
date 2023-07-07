@@ -15,7 +15,6 @@
             </tr>
         </table>
     </div>
-    <button @click ="changeFirstName">Change the first name</button>
     </template>
 
     <script>
