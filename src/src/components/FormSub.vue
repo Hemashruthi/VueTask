@@ -9,10 +9,10 @@
   
   
       <label>ROLL NUMBER(4 digit number)</label>
-    <input type="text" required v-model="formData.rollNum" pattern="[0-9]+" maxlength="4" minlength="4" />
+    <input type="text" required v-model="formData.roll_num" pattern="[0-9]+" maxlength="4" minlength="4" />
         
     <label>PHONE NUMBER</label>
-    <input type="tel" required v-model="formData.phNo" pattern="[0-9]+" maxlength="10" minlength="10"/>
+    <input type="tel" required v-model="formData.ph_no" pattern="[0-9]+" maxlength="10" minlength="10"/>
   
       <div class="gender">
         <label>GENDER</label><br>
@@ -24,9 +24,8 @@
         <img src="../components/icons/girl.png" alt="Female"></label>
       </div>
       
-      <div class="hobbies">
-       
-        <label>HOBBIES</label><br>
+     
+        <!-- <label>HOBBIES</label><br>
         <input type="checkbox" name="hob" id="read" value="Reading" v-model="formData.hobbies">
         <label>Reading</label><br>
         <input type="checkbox" name="hob" id="swim" value="Swimming" v-model="formData.hobbies">
@@ -34,9 +33,9 @@
         <input type="checkbox" name="hob" id="draw" value="Drawing" v-model="formData.hobbies">
         <label>Drawing</label><br>
         <input type="checkbox" name="hob" id="cook" value="Cooking" v-model="formData.hobbies">
-        <label>Cooking</label><br>
+        <label>Cooking</label><br> -->
         <!-- <input type="text" placeholder="OTHERS" name="Other_Hobby" maxlength="30" /> -->
-      </div>
+      
       
       <label>Marks(0-100)</label>
       <input type="number" v-model="formData.marks" min="0" max="100" required>
@@ -51,7 +50,9 @@
   </template>
   
   <script>
+
   export default {
+  
     props: {
       initialData: {
         type: Object,
@@ -63,11 +64,10 @@
         formData: {
         name: '',
         email: '',
-        rollNum: '',
-        phNo: '',
+        roll_num: '',
+        ph_no: '',
         gender: '',
-        hobbies: [],
-        mark: '',
+        marks: '',
         },
         isEdit: false
       }
@@ -130,13 +130,11 @@
     resetForm() {
       this.formData= {
       name: null,
-      phone: null,
       email: null,
-      rollNum: null,
-      phNo: null,
-      gende: null,
-      hobbies:[],
-      mark: null
+      roll_num: null,
+      ph_no: null,
+      gender: null,
+      marks: null
       };
     },
     deleteRow(index) {

@@ -7,7 +7,6 @@
             <th>Roll Number</th>
             <th>Phone Number</th>
             <th>Gender</th>
-            <th>Hobbies</th>
             <th>Grade</th>
             <th>Actions</th>
         </tr>
@@ -16,11 +15,9 @@
            
         <td> {{ row.name }} </td>
         <td> {{ row.email }}</td>
-        <td> {{ row.rollNum }}</td>
-        <td> {{ row.phNo }}</td>
-        
+        <td> {{ row.roll_num }}</td>
+        <td> {{ row.ph_no }}</td> 
         <td> {{ row.gender }}</td>
-        <td>{{ getHobbies(row) }}</td>
         <td> {{ calculateGrade(row.marks) }}</td>
         <td>
             <button @click="editRow(index)" class="edit">Edit</button>
@@ -34,22 +31,56 @@
 
 <script>
 import FormSub from '../components/FormSub.vue';
-import { calculateGrade } from '/src/filters.js'
+import { calculateGrade } from '/src/filters.js';
+import axios from 'axios';
 export default {
+    mounted() {
+        this.fetchData();
+    },
     components: {
         FormSub
     },
     data() {
         return {
             formSubmissions: [],
+            formData: [],
+        //     {
+        // name: '',
+        // email: '',
+        // roll_num: '',
+        // ph_no: '',
+        // gender: '',
+        // marks: '',
+        // },
             isEdit: false,
             editData: null,
             editIndex: null
         };
     },
     methods: {
+        fetchData() {
+    axios
+    .get('http://127.0.0.1:3333/form')
+    .then(response => {
+        this.formSubmissions = response.data;
+        console.log(this.formSubmissions)
+    })
+    .catch(error => {
+        console.log('Error')
+    })
+  },
         handleFormSubmitted(formData) {
-            this.formSubmissions.push({ ...formData, hobbies: [...formData.hobbies] });
+            console.log('fgj',formData);
+            axios.post('http://127.0.0.1:3333/formP', formData)
+            .then(response => {
+      console.log('Data saved successfully:', response.data);
+      this.fetchData();
+    //   this.isEdit = false;
+    })
+    .catch(error => {
+      console.error('Error saving data:', error);
+    });
+
             
         },
     editRow(index) {
@@ -58,17 +89,10 @@ export default {
       this.editIndex=index;
     },
     updateForm(formData) {
-        this.formSubmissions.splice(this.editIndex,1, { ...formData, hobbies: [...formData.hobbies] });
+        this.formSubmissions.splice(this.editIndex,1, { ...formData });
         this.isEdit = false;
       this.editData = null;
       this.editIndex = null;
-    },
-    getHobbies(row) {
-      if (Array.isArray(row.hobbies)) {
-        return row.hobbies.join(', ');
-      } else {
-        return '';
-      }
     },
     deleteRow(index) {
         this.formSubmissions.splice(index, 1);
