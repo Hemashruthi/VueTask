@@ -33,6 +33,7 @@ const router = createRouter({
     component: TableView,
     props: true
    }
+   
   ]
 })
 

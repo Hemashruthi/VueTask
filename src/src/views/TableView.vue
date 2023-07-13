@@ -1,5 +1,6 @@
 <template>
-    <FormSub @formSubmitted="handleFormSubmitted" v-if="!isEdit" /><br><br>
+<formSub v-if="isEdit==false" @formUpdated="updateForm" @form-data= "addFormData" :initialData="editData" @formDelete="deleteRow"  />
+
     <table>
         <tr>
             <th>Name</th>
@@ -7,12 +8,12 @@
             <th>Roll Number</th>
             <th>Phone Number</th>
             <th>Gender</th>
-            <th>Grade</th>
+            <th>Result</th>
             <th>Actions</th>
         </tr>
         <!-- <chid-component @customData="handleEvent"></chid-component> -->
-        <tr v-for="(row, index) in formSubmissions" :key="index">
-           
+        <tr v-for="(row, index) in formSubmissions" :key="row.id">
+          
         <td> {{ row.name }} </td>
         <td> {{ row.email }}</td>
         <td> {{ row.roll_num }}</td>
@@ -21,12 +22,12 @@
         <td> {{ calculateGrade(row.marks) }}</td>
         <td>
             <button @click="editRow(index)" class="edit">Edit</button>
-            <button @click="deleteRow(index)" class="del">Delete</button>
+            <button @click="deleteRow(row.id)" class="del">Delete</button>
         </td>
     </tr>
     </table>
 
-    <formSub v-if="isEdit" @formUpdated="updateForm" :initialData="editData" @formDelete="deleteRow" />
+    
     </template>
 
 <script>
@@ -36,6 +37,9 @@ import axios from 'axios';
 export default {
     mounted() {
         this.fetchData();
+    },
+    updated(){
+       //this.fetchData();
     },
     components: {
         FormSub
@@ -54,7 +58,7 @@ export default {
         // },
             isEdit: false,
             editData: null,
-            editIndex: null
+            editIndex: -1
         };
     },
     methods: {
@@ -63,39 +67,50 @@ export default {
     .get('http://127.0.0.1:3333/form')
     .then(response => {
         this.formSubmissions = response.data;
-        console.log(this.formSubmissions)
+        
     })
     .catch(error => {
         console.log('Error')
     })
   },
-        handleFormSubmitted(formData) {
-            console.log('fgj',formData);
-            axios.post('http://127.0.0.1:3333/formP', formData)
-            .then(response => {
-      console.log('Data saved successfully:', response.data);
-      this.fetchData();
+    //     handleFormSubmitted(formData) {
+    //         axios.post('http://127.0.0.1:3333/formP', formData)
+    //         .then(response => {
+    //   console.log('Data saved successfully:', response.data);
+    //   this.fetchData();
     //   this.isEdit = false;
-    })
-    .catch(error => {
-      console.error('Error saving data:', error);
-    });
-
-            
+    // })
+    // .catch(error => {
+    //   console.error('Error saving data:', error);
+    // });           
+    //     },
+        addFormData(row) {
+            this.formSubmissions.push(row);
         },
     editRow(index) {
-    this.isEdit = true;
+        this.editIndex =index;
+    // this.isEdit = true;
       this.editData = { ...this.formSubmissions[index] };
-      this.editIndex=index;
+
     },
-    updateForm(formData) {
-        this.formSubmissions.splice(this.editIndex,1, { ...formData });
-        this.isEdit = false;
+    updateForm(row) {
+        const response = axios.put(`http://127.0.0.1:3333/formU/${row.id}`, row);
+        this.formSubmissions.splice(this.editIndex,1, response.data);
+        //this.editData = { ...this.editData}
+        // this.isEdit = false;
       this.editData = null;
-      this.editIndex = null;
+    this.editIndex = -1;
     },
-    deleteRow(index) {
-        this.formSubmissions.splice(index, 1);
+    deleteRow(id) {
+        axios
+        .delete(`http://127.0.0.1:3333/formD/${id}`)
+        .then((response) => {
+          console.log('Data deleted successfully:', response.data);
+          this.fetchData();
+        })
+        .catch((error) => {
+          console.error('Error deleting data:', error);
+        });
     }
 },
 computed: {

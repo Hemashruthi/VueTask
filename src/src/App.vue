@@ -10,6 +10,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/task2">Task2</RouterLink>
         <RouterLink to="/form">Form</RouterLink>
         <RouterLink to="/prac">Practice</RouterLink>
+        <RouterLink to="/marks">Marks</RouterLink>
        
       </nav>
     
